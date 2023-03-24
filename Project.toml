@@ -1,0 +1,13 @@
+name = "VRPGeneticAlgorithm"
+uuid = "36809096-72fe-40b2-9a41-594a2e388d5e"
+authors = ["Guilherme Fernandes"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
