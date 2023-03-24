@@ -81,6 +81,7 @@ function crossover(
     idxGenerationParent::Vector{Int64},
     generationParent::Generation,
     pCross::Float64,
+    requestsWithRepetition::Bool,
     rng::AbstractRNG,
 )
     # get two on two combinations of chromosomes for population
@@ -90,7 +91,7 @@ function crossover(
     for i = 1:2:N-1
         j = i + 1
         c1 =
-            crossover(generationParent[i], generationParent[j], pCross, rng)
+            crossover(generationParent[i], generationParent[j], requestsWithRepetition, pCross, rng)
         push!(offspring, c1)
     end
     return offspring
