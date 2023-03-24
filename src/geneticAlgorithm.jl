@@ -91,7 +91,7 @@ function crossover(
     for i = 1:2:N-1
         j = i + 1
         c1 =
-            crossover(generationParent[i], generationParent[j], requestsWithRepetition, pCross, rng)
+            crossover(generationParent[i], generationParent[j], pCross, requestsWithRepetition, rng)
         push!(offspring, c1)
     end
     return offspring
