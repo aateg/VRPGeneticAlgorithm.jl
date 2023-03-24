@@ -1,5 +1,7 @@
 module VRPGeneticAlgorithm
 
-# Write your package code here.
+include("geneticAlgorithm.jl")
+
+export geneticAlgorithm, Parameters, Chromosome
 
 end
