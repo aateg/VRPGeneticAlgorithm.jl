@@ -11,7 +11,7 @@ function crossover(
     chromosome::Chromosome,
     other::Chromosome,
     maxCrossLen::Float64,
-    requestsWithRepetition::Bool = false,
+    requestsWithRepetition::Bool,
     rng::AbstractRNG,
 )
     N = length(chromosome.requests)
@@ -68,7 +68,7 @@ end
 
 # Mutation ---------------------------------------------------
 
-function mutate!(chromosome::AbstractChromosome, rng::AbstractRNG)
+function mutate!(chromosome::Chromosome, rng::AbstractRNG)
     idx1, idx2 = sample(rng, 1:length(chromosome.requests), 2, replace = false)
     chromosome.requests[idx1], chromosome.requests[idx2] =
         chromosome.requests[idx2], chromosome.requests[idx1]

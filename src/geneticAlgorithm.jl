@@ -1,9 +1,9 @@
-include("geneticSolution.jl")
+include("operators.jl")
 
-using Random: shuffle, AbstractRNG
+using Random: rand
 using StatsBase: Weights, sample
 
-Generation = Vector{Solution}
+Generation = Vector{Chromosome}
 
 struct Parameters
     populationSize::Int64
@@ -25,13 +25,14 @@ function geneticAlgorithm(
     generationParent::Generation,
     objFunction::Function,
     parameters::Parameters,
+    requestWithRepetition::Bool,
     rng::AbstractRNG,
 )
     for _ = 1:parameters.maxGenerations
         # Select the parents to be mated
         idxGenerationParent = rouletteWheelSelection(generationParent, objFunction, rng)
         # Crossover
-        offspring = crossover(idxGenerationParent, generationParent, parameters.pCross, rng)
+        offspring = crossover(idxGenerationParent, generationParent, parameters.pCross, requestWithRepetition, rng)
         # Mutation
         mutate!(offspring, parameters.pMutate, rng)
         # Selection of the fittest
@@ -85,11 +86,11 @@ function crossover(
     # get two on two combinations of chromosomes for population
     # and perform crossover
     N = length(idxGenerationParent)
-    offspring = Solution[]
+    offspring = Chromosome[]
     for i = 1:2:N-1
         j = i + 1
         c1 =
-            GeneticSolution.crossover(generationParent[i], generationParent[j], pCross, rng)
+            crossover(generationParent[i], generationParent[j], pCross, rng)
         push!(offspring, c1)
     end
     return offspring
@@ -100,7 +101,7 @@ end
 function mutate!(generation::Generation, pMutate::Float64, rng::AbstractRNG)
     for solution in generation
         if rand(rng) < pMutate
-            GeneticSolution.mutate!(solution, rng)
+            mutate!(solution, rng)
         end
     end
 end
