@@ -74,7 +74,6 @@ function crossRequestsWithRepetition(
             idx += 1
         end
     end
-    @show rep
     return v3
 end
 
