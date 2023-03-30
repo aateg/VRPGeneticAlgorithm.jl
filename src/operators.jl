@@ -23,13 +23,17 @@ function crossover(
 
     # cross the material
     if requestsWithRepetition
-        newRequests =
-            crossRequestsWithRepetition(chromosome.requests, other.requests, repetition, start, len)
+        newRequests = crossRequestsWithRepetition(
+            chromosome.requests,
+            other.requests,
+            repetition,
+            start,
+            len,
+        )
     else
         newRequests = crossVectors(chromosome.requests, other.requests, start, len)
     end
-    newVehicles =
-        crossVectorVehicles(chromosome.vehicles, other.vehicles, start, len)
+    newVehicles = crossVectorVehicles(chromosome.vehicles, other.vehicles, start, len)
 
     return Chromosome(newRequests, newVehicles)
 end
@@ -74,12 +78,7 @@ function crossRequestsWithRepetition(
     return v3
 end
 
-function crossVectorVehicles(
-    v1::Vector{Int64},
-    v2::Vector{Int64},
-    start::Int64,
-    len::Int64,
-)
+function crossVectorVehicles(v1::Vector{Int64}, v2::Vector{Int64}, start::Int64, len::Int64)
     v3 = copy(v1)
     v3[start:start+len-1] = v2[start:start+len-1]
     return v3

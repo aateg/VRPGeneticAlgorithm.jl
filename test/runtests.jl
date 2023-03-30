@@ -6,10 +6,8 @@ using Test
 
     @testset "Crossover" begin
         @testset "Test getRepetition" begin
-            @test VRPGeneticAlgorithm.getRepetition(
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                3,
-            ) == [3, 3, 3]
+            @test VRPGeneticAlgorithm.getRepetition([1, 1, 1, 2, 2, 2, 3, 3, 3], 3) ==
+                  [3, 3, 3]
         end
         @testset "Requests with repetition" begin
             numberOfRequests = 3
@@ -19,7 +17,13 @@ using Test
             start = 3
             len = 4
 
-            r3 = VRPGeneticAlgorithm.crossRequestsWithRepetition(r1, r2, repetition, start, len)
+            r3 = VRPGeneticAlgorithm.crossRequestsWithRepetition(
+                r1,
+                r2,
+                repetition,
+                start,
+                len,
+            )
             @test VRPGeneticAlgorithm.getRepetition(r3, numberOfRequests) == repetition
         end
     end
