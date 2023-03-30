@@ -25,14 +25,15 @@ function geneticAlgorithm(
     generationParent::Generation,
     objFunction::Function,
     parameters::Parameters,
-    requestWithRepetition::Bool,
     rng::AbstractRNG,
+    requestWithRepetition::Bool,
+    repetition::Vector{Int64} = Vector{Int64}(undef, 0),
 )
     for _ = 1:parameters.maxGenerations
         # Select the parents to be mated
         idxGenerationParent = rouletteWheelSelection(generationParent, objFunction, rng)
         # Crossover
-        offspring = crossover(idxGenerationParent, generationParent, parameters.pCross, requestWithRepetition, rng)
+        offspring = crossover(idxGenerationParent, generationParent, parameters.pCross, rng, requestWithRepetition, repetition)
         # Mutation
         mutate!(offspring, parameters.pMutate, rng)
         # Selection of the fittest

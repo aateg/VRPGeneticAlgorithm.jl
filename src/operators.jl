@@ -11,8 +11,9 @@ function crossover(
     chromosome::Chromosome,
     other::Chromosome,
     maxCrossLen::Float64,
-    requestsWithRepetition::Bool,
     rng::AbstractRNG,
+    requestsWithRepetition::Bool,
+    repetition::Vector{Int64} = Vector{Int64}(undef, 0),
 )
     N = length(chromosome.requests)
 
@@ -23,17 +24,57 @@ function crossover(
     # cross the material
     if requestsWithRepetition
         newRequests =
-            crossVectorsWithRepetition(chromosome.requests, other.requests, start, len)
+            crossRequestsWithRepetition(chromosome.requests, other.requests, repetition, start, len)
     else
         newRequests = crossVectors(chromosome.requests, other.requests, start, len)
     end
     newVehicles =
-        crossVectorsWithRepetition(chromosome.vehicles, other.vehicles, start, len)
+        crossVectorVehicles(chromosome.vehicles, other.vehicles, start, len)
 
     return Chromosome(newRequests, newVehicles)
 end
 
-function crossVectorsWithRepetition(
+function getRepetition(v::Vector{Int64}, n::Int64)
+    v1 = zeros(n)
+    for x in v
+        v1[x] += 1
+    end
+    return v1
+end
+
+function crossRequestsWithRepetition(
+    v1::Vector{Int64},
+    v2::Vector{Int64},
+    repetition::Vector{Int64},
+    start::Int64,
+    len::Int64,
+)
+    # PMX Crossover
+    N = length(v1)
+    v3 = Vector{Int64}(undef, N)
+
+    # cross the material
+    v3[start:start+len-1] = v2[start:start+len-1]
+
+    rep = getRepetition(v3[start:start+len-1], N)
+
+    idx = 1
+    for x in v1
+        if start <= idx < start + len
+            idx = start + len
+        end
+
+        if rep[x] < repetition[x]
+            v3[idx] = x
+            rep[x] += 1
+            idx += 1
+        end
+    end
+    @show rep
+    return v3
+end
+
+function crossVectorVehicles(
     v1::Vector{Int64},
     v2::Vector{Int64},
     start::Int64,
