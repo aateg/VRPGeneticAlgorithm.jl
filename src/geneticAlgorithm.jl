@@ -108,7 +108,7 @@ function crossover(
             pCross,
             rng,
             requestsWithRepetition,
-            repetition
+            repetition,
         )
         push!(offspring, c1)
     end
