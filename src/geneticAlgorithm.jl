@@ -29,6 +29,7 @@ function geneticAlgorithm(
     requestWithRepetition::Bool,
     repetition::Vector{Int64} = Vector{Int64}(undef, 0),
 )
+    numberOfInfeasibleSolutions = countInfeasibleSolutions(generationParent, objFunction)
     for _ = 1:parameters.maxGenerations
         # Select the parents to be mated
         idxGenerationParent = rouletteWheelSelection(generationParent, objFunction, rng)
@@ -41,13 +42,15 @@ function geneticAlgorithm(
             requestWithRepetition,
             repetition,
         )
+        # count infeasible solutions
+        numberOfInfeasibleSolutions += countInfeasibleSolutions(offspring, objFunction)
         # Mutation
         mutate!(offspring, parameters.pMutate, rng)
         # Selection of the fittest
         generationParent =
             sort([generationParent; offspring], by = objFunction, rev = true)[1:parameters.populationSize]
     end
-    return generationParent
+    return generationParent, numberOfInfeasibleSolutions
 end
 
 # Selection ----------------------------------------------
@@ -105,7 +108,7 @@ function crossover(
             pCross,
             rng,
             requestsWithRepetition,
-            repetition
+            repetition,
         )
         push!(offspring, c1)
     end
@@ -120,4 +123,17 @@ function mutate!(generation::Generation, pMutate::Float64, rng::AbstractRNG)
             mutate!(solution, rng)
         end
     end
+end
+
+
+# Utils -------------------------------------------------------
+
+function countInfeasibleSolutions(generation::Generation, objFunction::Function)
+    count = 0
+    for solution in generation
+        if objFunction(solution) < 1E-7
+            count += 1
+        end
+    end
+    return count
 end
